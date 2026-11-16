@@ -4,35 +4,83 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{% block title %}Courtify{% endblock %}</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root{--navy:#0B2A5B;--green:#15803D;--blue:#1D4ED8;--bg:#F4FAF6;--line:#DCE7E1;--muted:#475569;--ink:#0B1F3A}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Inter,sans-serif;background:var(--bg);color:var(--ink)}
+    a{color:var(--blue)}
+    .nav{display:flex;align-items:center;justify-content:space-between;padding:0 40px;height:68px;background:var(--navy)}
+    .brand{display:flex;align-items:center;gap:10px;color:#fff;font-weight:800;font-size:22px;text-decoration:none}
+    .nav-links{display:flex;align-items:center;gap:24px}
+    .nav-links a{color:#DBEAFE;text-decoration:none;font-weight:500;font-size:15px}
+    .nav-links a:hover{color:#fff}
+    .nav form{margin:0}
+    .btn{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 22px;border-radius:12px;border:0;font:600 15px Inter,sans-serif;background:var(--green);color:#fff;cursor:pointer;text-decoration:none}
+    .btn:hover{filter:brightness(1.1)}
+    .btn.blue{background:var(--blue)}
+    .btn.navy{background:var(--navy)}
+    .btn.outline{background:#fff;color:var(--navy);border:1px solid #C5D3CC}
+    .btn.sm{min-height:38px}
+    .btn.full{width:100%}
+    .btn:disabled{opacity:.6;cursor:wait}
+    .card{background:#fff;border:1px solid var(--line);border-radius:18px}
+    .container{max-width:1120px;margin:0 auto;padding:40px 24px}
+    .narrow{max-width:560px;margin:40px auto;padding:0 24px}
+    .eyebrow{font-weight:600;font-size:14px;letter-spacing:.04em}
+    h1,h2{margin:0}
+    .muted{color:var(--muted)}
+    .tag{display:inline-block;padding:4px 10px;border-radius:99px;font:600 12px Inter,sans-serif;background:#DCFCE7;color:#14532D}
+    .tag.blue{background:#DBEAFE;color:#1E3A8A}
+    .grid{display:grid;gap:16px}
+    .g2{grid-template-columns:1fr 1fr}
+    .g3{grid-template-columns:repeat(3,1fr)}
+    .g4{grid-template-columns:repeat(4,1fr)}
+    .field{margin-bottom:16px}
+    .field label{display:block;margin-bottom:6px;font-weight:600;font-size:14px}
+    .field input[type=text],.field input[type=email],.field input[type=password],.field input[type=tel]{width:100%;min-height:46px;padding:0 14px;border:1px solid #C5D3CC;border-radius:12px;font:15px Inter,sans-serif}
+    .field input:focus{outline:2px solid var(--blue);outline-offset:1px}
+    .field input[type=file]{font:14px Inter,sans-serif}
+    .help{margin-top:6px;font-size:13px;color:var(--muted)}
+    .help ul{margin:4px 0 0;padding-left:18px}
+    .err{margin-top:6px;font-size:13px;font-weight:600;color:#B91C1C}
+    .alert{padding:14px 18px;border-radius:12px;margin-bottom:16px;font-weight:500;border:1px solid}
+    .alert-success{background:#DCFCE7;color:#14532D;border-color:#86EFAC}
+    .alert-error{background:#FEE2E2;color:#7F1D1D;border-color:#FCA5A5}
+    .alert-warning{background:#FEF3C7;color:#78350F;border-color:#FCD34D}
+    .alert-info{background:#DBEAFE;color:#1E3A8A;border-color:#93C5FD}
+    .avatar{display:flex;align-items:center;justify-content:center;border-radius:50%;background:var(--green);color:#fff;font-weight:800;object-fit:cover;overflow:hidden}
+    @media(max-width:800px){.g3,.g4,.g2{grid-template-columns:1fr}.nav{padding:0 16px}.nav-links{gap:14px}}
+  </style>
+  {% block extra_head %}{% endblock %}
 </head>
 <body>
-<nav class="navbar navbar-expand navbar-dark bg-dark px-3">
-  <a class="navbar-brand" href="{% url 'accounts:dashboard' %}">Courtify</a>
-  <ul class="navbar-nav ms-auto align-items-center">
+{% block body %}
+<nav class="nav">
+  <a class="brand" href="{% url 'accounts:dashboard' %}">
+    <svg aria-hidden="true" width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="#4ADE80" stroke-width="2.4"><circle cx="14" cy="14" r="11"/><path d="M3 14h22M14 3c5 4 5 18 0 22M14 3c-5 4-5 18 0 22"/></svg>
+    Courtify
+  </a>
+  <div class="nav-links">
     {% if user.is_authenticated %}
       {% if user.role == 'admin' %}
-        <li class="nav-item"><a class="nav-link" href="{% url 'accounts:admin_dashboard' %}">Admin Dashboard</a></li>
+        <a href="{% url 'accounts:admin_dashboard' %}">Admin Dashboard</a>
       {% else %}
-        <li class="nav-item"><a class="nav-link" href="{% url 'accounts:customer_dashboard' %}">My Dashboard</a></li>
+        <a href="{% url 'accounts:customer_dashboard' %}">My Dashboard</a>
       {% endif %}
-      <li class="nav-item"><a class="nav-link" href="{% url 'accounts:profile' %}">Profile</a></li>
-      <li class="nav-item">
-        <form method="post" action="{% url 'accounts:logout' %}">{% csrf_token %}
-          <button class="btn btn-outline-light btn-sm ms-2">Logout</button>
-        </form>
-      </li>
+      <a href="{% url 'accounts:profile' %}">Profile</a>
+      <form method="post" action="{% url 'accounts:logout' %}">{% csrf_token %}
+        <button class="btn sm">Logout</button>
+      </form>
     {% else %}
-      <li class="nav-item"><a class="nav-link" href="{% url 'accounts:login' %}">Login</a></li>
-      <li class="nav-item"><a class="nav-link" href="{% url 'accounts:register' %}">Register</a></li>
+      <a href="{% url 'accounts:login' %}">Login</a>
+      <a href="{% url 'accounts:register' %}">Register</a>
     {% endif %}
-  </ul>
+  </div>
 </nav>
-<div class="container mt-4">
-  {% for message in messages %}
-    <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %}">{{ message }}</div>
-  {% endfor %}
+<main>
   {% block content %}{% endblock %}
-</div>
+</main>
+{% endblock %}
 </body>
 </html>

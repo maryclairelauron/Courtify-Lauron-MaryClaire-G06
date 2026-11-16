@@ -1,12 +1,25 @@
 {% extends 'base.html' %}
+{% block title %}Register | Courtify{% endblock %}
 {% block content %}
-<div class="col-md-6 mx-auto">
-  <h2>Create an Account</h2>
-  <form method="post" id="register-form">{% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="btn btn-primary" id="register-btn">Register</button>
-  </form>
-  <p class="mt-3">Already have an account? <a href="{% url 'accounts:login' %}">Log in</a></p>
+<div class="narrow">
+  {% include 'accounts/_messages.html' %}
+  <div class="card" style="padding:36px">
+    <h1 style="font-size:30px;font-weight:800;margin-bottom:6px">Create an Account</h1>
+    <p class="muted" style="margin:0 0 24px">Join Courtify and start booking courts.</p>
+    <form method="post" id="register-form">{% csrf_token %}
+      <div class="grid g2" style="gap:16px">
+        {% include 'accounts/_field.html' with field=form.first_name %}
+        {% include 'accounts/_field.html' with field=form.last_name %}
+      </div>
+      {% include 'accounts/_field.html' with field=form.username %}
+      {% include 'accounts/_field.html' with field=form.email %}
+      {% include 'accounts/_field.html' with field=form.contact_number %}
+      {% include 'accounts/_field.html' with field=form.password1 %}
+      {% include 'accounts/_field.html' with field=form.password2 %}
+      <button type="submit" class="btn full" id="register-btn">Register</button>
+    </form>
+    <p style="margin:20px 0 0;text-align:center;font-size:14px">Already have an account? <a href="{% url 'accounts:login' %}">Log in</a></p>
+  </div>
 </div>
 <script>
   document.getElementById('register-form').addEventListener('submit', function () {
