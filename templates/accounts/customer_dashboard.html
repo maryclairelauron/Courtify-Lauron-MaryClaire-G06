@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Customer Dashboard</h2>
+<p>Welcome, {{ user.first_name|default:user.username }}.</p>
+<ul>
+  <li>Browse Courts (coming soon)</li>
+  <li>My Bookings (coming soon)</li>
+</ul>
+{% endblock %}

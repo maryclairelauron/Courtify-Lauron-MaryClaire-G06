@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Admin Dashboard</h2>
+<p>Welcome, {{ user.first_name|default:user.username }}.</p>
+<ul>
+  <li>Manage Courts (coming soon)</li>
+  <li>Manage Bookings (coming soon)</li>
+  <li>Manage Users (coming soon)</li>
+</ul>
+{% endblock %}
