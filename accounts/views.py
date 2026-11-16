@@ -34,11 +34,18 @@ def register_view(request):
     form = RegisterForm(request.POST or None)
     if request.method == 'POST':
         if form.is_valid():
-            form.save()
-            messages.success(request, "Account created! You can now log in.")
-            return redirect('accounts:login')
+            user = form.save()
+            request.session['registered_username'] = user.username
+            return redirect('accounts:register_success')
         messages.error(request, "Please fix the errors below.")
     return render(request, 'accounts/register.html', {'form': form})
+
+
+def register_success(request):
+    username = request.session.pop('registered_username', None)
+    if not username:
+        return redirect('accounts:register')
+    return render(request, 'accounts/register_success.html', {'username': username})
 
 
 class CourtifyLoginView(LoginView):

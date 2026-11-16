@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="col-md-6 mx-auto text-center">
+  <div class="alert alert-success">
+    <h4 class="alert-heading">Account created successfully!</h4>
+    <p class="mb-0">Welcome to Courtify, <b>{{ username }}</b>. You can now log in.</p>
+  </div>
+  <a href="{% url 'accounts:login' %}" class="btn btn-primary btn-lg">Go to Login</a>
+</div>
+{% endblock %}
