@@ -1,19 +1,30 @@
+
 {% extends 'base.html' %}
 {% block title %}{{ title }} | Courtify{% endblock %}
 {% block content %}
 <div class="narrow">
-  {% include 'accounts/_messages.html' %}
-  <div class="card" style="padding:36px">
-    <h1 style="font-size:30px;margin-bottom:22px">{{ title }}</h1>
-    <form method="post">{% csrf_token %}
-      {% for field in form %}
-        {% include 'accounts/_field.html' with field=field %}
-      {% endfor %}
-      <div style="display:flex;gap:12px;margin-top:8px">
-        <button class="btn">Save</button>
-        <a class="btn outline" href="{% url 'courts:list' %}">Cancel</a>
-      </div>
-    </form>
-  </div>
+    {% include 'accounts/_messages.html' %}
+
+    <div class="eyebrow">Facility administration</div>
+    <h1>{{ title }}</h1>
+    <p class="muted" style="margin-bottom:22px">Enter the court information and availability details below.</p>
+
+    <section class="card card-pad">
+        <form method="post">
+            {% csrf_token %}
+            {% if form.non_field_errors %}
+                <div class="form-errors">{{ form.non_field_errors }}</div>
+            {% endif %}
+
+            {% for field in form %}
+                {% include 'accounts/_field.html' with field=field %}
+            {% endfor %}
+
+            <div class="rowbtns" style="margin-top:22px">
+                <button type="submit" class="btn">Save Court</button>
+                <a href="{% url 'courts:list' %}" class="btn outline">Cancel</a>
+            </div>
+        </form>
+    </section>
 </div>
 {% endblock %}

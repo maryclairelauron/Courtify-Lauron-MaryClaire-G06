@@ -1,43 +1,87 @@
+
 {% extends 'base.html' %}
 {% block title %}Manage Courts | Courtify{% endblock %}
 {% block content %}
 <div class="container">
-  {% include 'accounts/_messages.html' %}
-  <div class="pagehead">
-    <div>
-      <div class="eyebrow" style="color:var(--blue)">ADMIN</div>
-      <h1>Manage courts</h1>
-      <p class="muted" style="margin:6px 0 0">Add, edit and set rates for your courts.</p>
-    </div>
-    <a class="btn" href="{% url 'courts:create' %}">Add court</a>
-  </div>
+    {% include 'accounts/_messages.html' %}
 
-  {% if courts %}
-  <div class="tablewrap">
-    <table class="tbl">
-      <thead><tr><th>Court</th><th>Details</th><th>Rate</th><th>Status</th><th></th></tr></thead>
-      <tbody>
-        {% for c in courts %}
-        <tr>
-          <td class="name">{{ c.name }}</td>
-          <td>{{ c.get_environment_display }} · Pickleball · Up to {{ c.max_players }} players</td>
-          <td class="num">₱{{ c.rate_per_hour|floatformat:"-2" }}/hr</td>
-          <td>{% if c.status == 'active' %}<span class="tag">Available</span>{% else %}<span class="tag wait">Maintenance</span>{% endif %}</td>
-          <td>
-            <div class="rowbtns">
-              <a class="btn outline xs" href="{% url 'courts:update' c.pk %}">Edit</a>
-              <form method="post" action="{% url 'courts:delete' c.pk %}" onsubmit="return confirm('Delete {{ c.name|escapejs }}?')">{% csrf_token %}
-                <button class="btn del xs">Delete</button>
-              </form>
+    <div class="pagehead">
+        <div>
+            <div class="eyebrow">Facility administration</div>
+            <h1>Manage Courts</h1>
+            <p class="muted" style="margin:0">Add, update, and manage your Kawayan Base courts.</p>
+        </div>
+        <a href="{% url 'courts:create' %}" class="btn">＋ Add New Court</a>
+    </div>
+
+    <div class="grid g3" style="margin-bottom:22px">
+        <div class="card stat-card">
+            <span class="stat-accent"></span>
+            <div class="stat-label">TOTAL COURTS</div>
+            <div class="stat-number">{{ courts|length }}</div>
+            <p class="stat-note">Registered courts</p>
+        </div>
+        <div class="card stat-card">
+            <span class="stat-accent" style="background:#16834A"></span>
+            <div class="stat-label">AVAILABLE</div>
+            <div class="stat-number">{% with active_count=0 %}{% endwith %}{% for c in courts %}{% if c.status == 'active' %}{{ forloop.counter0|add:0 }}{% endif %}{% endfor %}</div>
+            <p class="stat-note">See status in the court list below</p>
+        </div>
+        <div class="card stat-card">
+            <span class="stat-accent" style="background:#E7A23B"></span>
+            <div class="stat-label">COURT MANAGEMENT</div>
+            <div class="stat-number">—</div>
+            <p class="stat-note">Update availability and rates</p>
+        </div>
+    </div>
+
+    <section class="card card-pad">
+        <div class="pagehead" style="margin-bottom:16px">
+            <div>
+                <h2 style="margin:0">Court Directory</h2>
+                <p class="muted" style="font-size:12px;margin:4px 0 0">All courts registered in the system.</p>
             </div>
-          </td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
-  {% else %}
-  <div class="card" style="padding:32px"><p class="muted" style="margin:0">No courts yet. Click "Add court" to create your first one.</p></div>
-  {% endif %}
+        </div>
+
+        {% if courts %}
+        <div class="tablewrap">
+            <table class="tbl">
+                <thead>
+                    <tr><th>Court</th><th>Environment</th><th>Players</th><th>Rate / Hour</th><th>Status</th><th>Actions</th></tr>
+                </thead>
+                <tbody>
+                {% for c in courts %}
+                    <tr>
+                        <td><strong>{{ c.name }}</strong>{% if c.description %}<div class="muted" style="font-size:11px;margin-top:3px">{{ c.description|truncatechars:65 }}</div>{% endif %}</td>
+                        <td>{{ c.get_environment_display }}</td>
+                        <td>Up to {{ c.max_players }}</td>
+                        <td><strong>₱{{ c.rate_per_hour|floatformat:2 }}</strong></td>
+                        <td>
+                            {% if c.status == 'active' %}<span class="tag">Available</span>
+                            {% else %}<span class="tag wait">Maintenance</span>{% endif %}
+                        </td>
+                        <td>
+                            <div class="rowbtns">
+                                <a class="btn outline small" href="{% url 'courts:update' c.pk %}">Edit</a>
+                                <form method="post" action="{% url 'courts:delete' c.pk %}" onsubmit="return confirm('Delete {{ c.name|escapejs }}?');">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn danger small">Delete</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <div class="empty-icon">＋</div>
+            <h2>No courts added yet</h2>
+            <p class="muted">Add your first court to begin managing facility availability.</p>
+            <a href="{% url 'courts:create' %}" class="btn">Add Your First Court</a>
+        </div>
+        {% endif %}
+    </section>
 </div>
 {% endblock %}

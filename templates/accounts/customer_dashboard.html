@@ -1,29 +1,66 @@
+
 {% extends 'base.html' %}
 {% block title %}My Dashboard | Courtify{% endblock %}
 {% block content %}
 <div class="container">
-  {% include 'accounts/_messages.html' %}
-  <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:28px;flex-wrap:wrap;gap:12px">
-    <div>
-      <div class="eyebrow" style="color:var(--green)">CUSTOMER DASHBOARD</div>
-      <h1 style="font-size:36px;font-weight:800;margin-top:4px">Ready to play, {{ user.first_name|default:user.username }}?</h1>
+    {% include 'accounts/_messages.html' %}
+
+    <section style="background:var(--navy);color:white;padding:35px;border-radius:18px;margin-bottom:25px;position:relative;overflow:hidden">
+        <div style="color:var(--lime);font-size:11px;font-weight:900;letter-spacing:2px">WELCOME TO KAWAYAN BASE</div>
+        <h1 style="margin:10px 0;color:white">Ready to play, {{ user.first_name|default:user.username }}?</h1>
+        <p style="color:#D5DDE9;max-width:550px;margin-bottom:20px">Find an available pickleball court, choose your preferred schedule, and reserve your next game.</p>
+        <div class="rowbtns">
+            <a href="{% url 'bookings:booking_create' %}" class="btn">＋ Book a Court</a>
+            <a href="{% url 'bookings:booking_list' %}" class="btn outline" style="background:transparent;border-color:#61718A;color:white">My Bookings</a>
+        </div>
+        <p style="color:#AEBBD0;font-size:11px;margin:22px 0 0">{{ today|date:"l, F d, Y" }}</p>
+    </section>
+
+    <div class="grid g3" style="margin-bottom:25px">
+        <div class="card stat-card"><span class="stat-accent"></span><div class="stat-label">TOTAL BOOKINGS</div><div class="stat-number">{{ total_bookings|default:0 }}</div><p class="stat-note">All your reservations</p></div>
+        <div class="card stat-card"><span class="stat-accent" style="background:#4D8FE8"></span><div class="stat-label">UPCOMING BOOKINGS</div><div class="stat-number">{{ upcoming_count|default:0 }}</div><p class="stat-note">Future confirmed or pending games</p></div>
+        <div class="card stat-card"><span class="stat-accent" style="background:#E7A23B"></span><div class="stat-label">PENDING BOOKINGS</div><div class="stat-number">{{ pending_count|default:0 }}</div><p class="stat-note">Waiting for approval</p></div>
     </div>
-    <span class="btn blue" style="opacity:.6">Book a court (coming soon)</span>
-  </div>
 
-  <div class="grid g3" style="margin-bottom:36px">
-    <div class="card" style="padding:22px"><div class="muted" style="font-size:14px;font-weight:500">Upcoming bookings</div><div style="font-size:34px;font-weight:800;color:var(--blue)">—</div></div>
-    <div class="card" style="padding:22px"><div class="muted" style="font-size:14px;font-weight:500">Hours played</div><div style="font-size:34px;font-weight:800;color:var(--green)">—</div></div>
-    <div class="card" style="padding:22px"><div class="muted" style="font-size:14px;font-weight:500">Favorite sport</div><div style="font-size:34px;font-weight:800;color:var(--navy)">—</div></div>
-  </div>
+    <section class="card card-pad" style="margin-bottom:25px">
+        <div class="eyebrow">Make time for your game</div>
+        <h2 style="margin:5px 0 8px">Your Next Game Starts Here</h2>
+        <p class="muted">Reserve a court at Kawayan Base and keep track of your upcoming schedule.</p>
+        <div class="rowbtns">
+            <a href="{% url 'bookings:booking_create' %}" class="btn">Reserve a Court</a>
+            <a href="{% url 'bookings:booking_list' %}" class="btn outline">View My Bookings</a>
+            <a href="{% url 'accounts:profile' %}" class="btn outline">Manage Profile</a>
+        </div>
+    </section>
 
-  <h2 style="font-size:22px;font-weight:700;margin-bottom:16px">Browse courts</h2>
-  <div class="grid g4">
-    {% for sport, color in sports %}{% endfor %}
-    <div class="card" style="overflow:hidden"><div style="height:120px;background:#15803D"></div><div style="padding:18px"><div style="font-weight:700;font-size:18px">Badminton</div><div class="muted" style="margin:4px 0 12px;font-size:14px">Courts coming soon</div><span class="tag blue">Coming soon</span></div></div>
-    <div class="card" style="overflow:hidden"><div style="height:120px;background:#1D4ED8"></div><div style="padding:18px"><div style="font-weight:700;font-size:18px">Basketball</div><div class="muted" style="margin:4px 0 12px;font-size:14px">Courts coming soon</div><span class="tag blue">Coming soon</span></div></div>
-    <div class="card" style="overflow:hidden"><div style="height:120px;background:#0B2A5B"></div><div style="padding:18px"><div style="font-weight:700;font-size:18px">Tennis</div><div class="muted" style="margin:4px 0 12px;font-size:14px">Courts coming soon</div><span class="tag blue">Coming soon</span></div></div>
-    <div class="card" style="overflow:hidden"><div style="height:120px;background:#166534"></div><div style="padding:18px"><div style="font-weight:700;font-size:18px">Futsal</div><div class="muted" style="margin:4px 0 12px;font-size:14px">Courts coming soon</div><span class="tag blue">Coming soon</span></div></div>
-  </div>
+    <section class="card card-pad">
+        <div class="pagehead" style="margin-bottom:17px">
+            <div>
+                <div class="eyebrow">Your schedule</div>
+                <h2 style="margin:5px 0">Upcoming Bookings</h2>
+                <p class="muted" style="margin:0">Your next scheduled games at Kawayan Base.</p>
+            </div>
+            <a href="{% url 'bookings:booking_list' %}" class="btn outline small">View all →</a>
+        </div>
+        <div class="tablewrap">
+            <table class="tbl">
+                <thead><tr><th>Court</th><th>Date</th><th>Time</th><th>Price</th><th>Status</th><th></th></tr></thead>
+                <tbody>
+                {% for booking in upcoming_bookings %}
+                    <tr>
+                        <td><strong>{{ booking.court.name }}</strong></td>
+                        <td>{{ booking.booking_date|date:"M d, Y" }}</td>
+                        <td>{{ booking.start_time|time:"g:i A" }} – {{ booking.end_time|time:"g:i A" }}</td>
+                        <td>₱{{ booking.total_price|floatformat:2 }}</td>
+                        <td>{% if booking.status == 'confirmed' %}<span class="tag">Confirmed</span>{% else %}<span class="tag wait">Pending</span>{% endif %}</td>
+                        <td><a class="btn outline small" href="{% url 'bookings:booking_detail' booking.pk %}">Details</a></td>
+                    </tr>
+                {% empty %}
+                    <tr><td colspan="6"><div class="empty-state"><div class="empty-icon">🏓</div><strong>No upcoming bookings yet</strong><p class="muted" style="margin:5px 0 15px">Your next game is just a reservation away.</p><a href="{% url 'bookings:booking_create' %}" class="btn">Book Your First Court</a></div></td></tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
 </div>
 {% endblock %}

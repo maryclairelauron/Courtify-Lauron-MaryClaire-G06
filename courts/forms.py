@@ -7,7 +7,10 @@ class CourtForm(forms.ModelForm):
     class Meta:
         model = Court
         fields = ('name', 'environment', 'rate_per_hour', 'max_players', 'status', 'description')
-        labels = {'rate_per_hour': 'Rate per hour (₱)', 'max_players': 'Max players'}
+        labels = {
+                    'rate_per_hour': 'Rate per hour (PHP)',
+                    'max_players': 'Max players',
+        }
         widgets = {
             'name': forms.TextInput(attrs={'placeholder': 'Court 1'}),
             'description': forms.Textarea(attrs={'rows': 3}),

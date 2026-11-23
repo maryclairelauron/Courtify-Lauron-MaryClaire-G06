@@ -1,14 +1,127 @@
+
 {% extends 'base.html' %}
-{% block title %}Account Created | Courtify{% endblock %}
-{% block content %}
-<div class="narrow" style="max-width:520px;margin-top:80px;text-align:center">
-  <div class="card" style="padding:44px 36px">
-    <div class="avatar" style="width:72px;height:72px;margin:0 auto 20px;background:#DCFCE7">
-      <svg aria-hidden="true" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#15803D" stroke-width="3"><path d="M5 12.5l4.5 4.5L19 7"/></svg>
+{% load static %}
+
+{% block title %}Account Created | Kawayan Base{% endblock %}
+
+{% block extra_head %}
+<style>
+  body { background: #F5F7FA; }
+
+  .success-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 25px;
+    background: #F5F7FA;
+  }
+
+  .success-card {
+    width: 100%;
+    max-width: 490px;
+    padding: 45px 35px;
+    text-align: center;
+    background: white;
+    border: 1px solid #E2E8F0;
+    border-radius: 22px;
+    box-shadow: 0 18px 55px rgba(16,29,53,.08);
+  }
+
+  .success-brand {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 32px;
+  }
+
+  .success-brand img {
+    width: 37px;
+    height: 37px;
+    object-fit: contain;
+  }
+
+  .success-brand span {
+    color: #101D35;
+    font-size: 13px;
+    font-weight: 900;
+    letter-spacing: .12em;
+  }
+
+  .success-icon {
+    width: 76px;
+    height: 76px;
+    margin: 0 auto 23px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: #EFF7D5;
+    color: #42620A;
+  }
+
+  .success-card h1 {
+    color: #101D35;
+    font-size: 27px;
+    font-weight: 900;
+    letter-spacing: -.04em;
+    margin-bottom: 12px;
+  }
+
+  .success-card p {
+    color: #64748B;
+    font-size: 14px;
+    line-height: 1.8;
+    margin-bottom: 26px;
+  }
+
+  .success-card strong { color: #101D35; }
+
+  .success-card .btn {
+    width: 100%;
+    min-height: 49px;
+    background: #B5D334;
+    color: #101D35;
+    font-size: 13px;
+    font-weight: 900;
+  }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="success-page">
+  <section class="success-card">
+
+    <div class="success-brand">
+      <img src="{% static 'img/courtify-logo.png' %}" alt="Courtify">
+      <img src="{% static 'img/kawayan-logo.png' %}" alt="Kawayan Base">
+      <span>KAWAYAN BASE</span>
     </div>
-    <h1 style="font-size:28px;font-weight:800;margin-bottom:8px">Account created successfully!</h1>
-    <p class="muted" style="margin:0 0 28px;font-size:16px">Welcome to Courtify, <b>{{ username }}</b>. You can now log in.</p>
-    <a href="{% url 'accounts:login' %}" class="btn blue" style="min-width:200px">Go to Login</a>
-  </div>
+
+    <div class="success-icon">
+      <svg width="38" height="38" viewBox="0 0 24 24"
+           fill="none" stroke="currentColor" stroke-width="2.5"
+           stroke-linecap="round" stroke-linejoin="round"
+           aria-hidden="true">
+        <path d="M5 12.5l4.5 4.5L19 7"/>
+      </svg>
+    </div>
+
+    <div class="eyebrow" style="margin-bottom:12px">WELCOME TO THE CLUB</div>
+
+    <h1>You're officially in!</h1>
+
+    <p>
+      Your Kawayan Base account has been created successfully,
+      <strong>{{ username }}</strong>. You can now log in and start
+      managing your court reservations.
+    </p>
+
+    <a href="{% url 'accounts:login' %}" class="btn">
+      CONTINUE TO LOGIN
+    </a>
+
+  </section>
 </div>
 {% endblock %}

@@ -1,51 +1,36 @@
 
 {% extends 'base.html' %}
-
+{% block title %}{{ page_title }} | Courtify{% endblock %}
 {% block content %}
-<div class="container py-5">
-    <div class="card shadow-sm mx-auto" style="max-width: 650px;">
-        <div class="card-header text-white"
-             style="background: #126B9C;">
-            <h3 class="mb-0">{{ page_title }}</h3>
+<div class="narrow">
+    {% include 'accounts/_messages.html' %}
+
+    <div class="eyebrow">Court reservation</div>
+    <h1>{{ page_title }}</h1>
+    <p class="muted" style="margin-bottom:22px">Choose your court and preferred playing schedule.</p>
+
+    <section class="card card-pad">
+        <div style="background:#F4F7E8;border:1px solid #E3EBC4;padding:14px 16px;border-radius:10px;margin-bottom:22px">
+            <strong style="color:var(--navy)">Before you reserve</strong>
+            <p class="muted" style="font-size:12px;margin:4px 0 0">Select an available court and a future date and time. Your reservation will be submitted with pending status.</p>
         </div>
 
-        <div class="card-body">
-            <form method="POST">
-                {% csrf_token %}
+        <form method="post">
+            {% csrf_token %}
 
-                {% if form.non_field_errors %}
-                    <div class="alert alert-danger">
-                        {{ form.non_field_errors }}
-                    </div>
-                {% endif %}
+            {% if form.non_field_errors %}
+                <div class="form-errors">{{ form.non_field_errors }}</div>
+            {% endif %}
 
-                {% for field in form %}
-                    <div class="mb-3">
-                        <label class="form-label">
-                            {{ field.label }}
-                        </label>
+            {% for field in form %}
+                {% include 'accounts/_field.html' with field=field %}
+            {% endfor %}
 
-                        {{ field }}
-
-                        {% for error in field.errors %}
-                            <div class="text-danger small">
-                                {{ error }}
-                            </div>
-                        {% endfor %}
-                    </div>
-                {% endfor %}
-
-                <button type="submit"
-                        class="btn btn-primary w-100">
-                    Save Booking
-                </button>
-
-                <a href="{% url 'bookings:booking_list' %}"
-                   class="btn btn-outline-secondary w-100 mt-2">
-                    Back to My Bookings
-                </a>
-            </form>
-        </div>
-    </div>
+            <div class="rowbtns" style="margin-top:22px">
+                <button type="submit" class="btn">{% if page_title == 'Update Booking' %}Save Changes{% else %}Submit Booking{% endif %}</button>
+                <a href="{% url 'bookings:booking_list' %}" class="btn outline">Back to Bookings</a>
+            </div>
+        </form>
+    </section>
 </div>
 {% endblock %}

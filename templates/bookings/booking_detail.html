@@ -1,34 +1,50 @@
 
 {% extends 'base.html' %}
-
+{% block title %}Booking Details | Courtify{% endblock %}
 {% block content %}
-<div class="container py-5">
-    <div class="card shadow-sm mx-auto" style="max-width: 700px;">
-        <div class="card-header text-white" style="background: #126B9C;">
-            <h3 class="mb-0">Booking Details</h3>
+<div class="narrow">
+    {% include 'accounts/_messages.html' %}
+
+    <div class="eyebrow">Reservation information</div>
+    <h1>Booking Details</h1>
+    <p class="muted" style="margin-bottom:22px">Review the details of this court reservation.</p>
+
+    <section class="card" style="overflow:hidden">
+        <div style="background:var(--navy);padding:24px 26px;color:white">
+            <div style="font-size:10px;letter-spacing:2px;color:var(--lime);font-weight:900">COURTIFY RESERVATION</div>
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-top:8px">
+                <h2 style="color:white;margin:0">Booking #{{ booking.id }}</h2>
+                {% if booking.status == 'confirmed' %}<span class="tag">Confirmed</span>
+                {% elif booking.status == 'cancelled' %}<span class="tag cancel">Cancelled</span>
+                {% else %}<span class="tag wait">Pending</span>{% endif %}
+            </div>
         </div>
 
-        <div class="card-body">
-            <p><strong>Booking ID:</strong> #{{ booking.id }}</p>
-            <p><strong>Customer:</strong> {{ booking.user.username }}</p>
-            <p><strong>Court:</strong> {{ booking.court.name }}</p>
-            <p><strong>Environment:</strong> {{ booking.court.get_environment_display }}</p>
-            <p><strong>Date:</strong> {{ booking.booking_date|date:"F d, Y" }}</p>
-            <p>
-                <strong>Time:</strong>
-                {{ booking.start_time|time:"g:i A" }}
-                -
-                {{ booking.end_time|time:"g:i A" }}
-            </p>
-            <p><strong>Total Price:</strong> ₱{{ booking.total_price|floatformat:2 }}</p>
-            <p><strong>Status:</strong> {{ booking.get_status_display }}</p>
-            <p><strong>Submitted:</strong> {{ booking.created_at|date:"M d, Y - g:i A" }}</p>
+        <div class="card-pad">
+            <h2 style="font-size:16px;margin-bottom:10px">Reservation Details</h2>
+            <div class="detail-row"><span class="detail-label">COURT</span><span class="detail-value">{{ booking.court.name }}</span></div>
+            <div class="detail-row"><span class="detail-label">ENVIRONMENT</span><span class="detail-value">{{ booking.court.get_environment_display }}</span></div>
+            <div class="detail-row"><span class="detail-label">BOOKING DATE</span><span class="detail-value">{{ booking.booking_date|date:"F d, Y" }}</span></div>
+            <div class="detail-row"><span class="detail-label">TIME</span><span class="detail-value">{{ booking.start_time|time:"g:i A" }} – {{ booking.end_time|time:"g:i A" }}</span></div>
+            {% if request.user.role == 'admin' %}
+                <div class="detail-row"><span class="detail-label">CUSTOMER</span><span class="detail-value">{{ booking.user.get_full_name|default:booking.user.username }}</span></div>
+            {% endif %}
+            <div class="detail-row"><span class="detail-label">TOTAL PRICE</span><span class="detail-value" style="font-size:18px;color:var(--navy)">₱{{ booking.total_price|floatformat:2 }}</span></div>
+            <div class="detail-row"><span class="detail-label">SUBMITTED</span><span class="detail-value">{{ booking.created_at|date:"M d, Y - g:i A" }}</span></div>
 
-            <a href="{% url 'bookings:booking_list' %}"
-               class="btn btn-outline-secondary">
-                Back to Bookings
-            </a>
+            <div class="rowbtns" style="margin-top:23px">
+                <a href="{% url 'bookings:booking_list' %}" class="btn outline">← Back to Bookings</a>
+                {% if booking.user == request.user and booking.status != 'cancelled' %}
+                    <a href="{% url 'bookings:booking_update' booking.pk %}" class="btn">Edit Booking</a>
+                {% endif %}
+                {% if booking.status != 'cancelled' %}
+                    <form method="post" action="{% url 'bookings:booking_cancel' booking.pk %}" onsubmit="return confirm('Are you sure you want to cancel this booking?');">
+                        {% csrf_token %}
+                        <button type="submit" class="btn danger">Cancel Booking</button>
+                    </form>
+                {% endif %}
+            </div>
         </div>
-    </div>
+    </section>
 </div>
 {% endblock %}

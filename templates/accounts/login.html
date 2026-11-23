@@ -1,40 +1,257 @@
+
 {% extends 'base.html' %}
-{% block title %}Login | Courtify{% endblock %}
+{% load static %}
+
+{% block title %}Login | Kawayan Base{% endblock %}
+
 {% block extra_head %}
 <style>
-  .split{display:flex;min-height:100vh}
-  .hero{flex:1.1;background:var(--navy);color:#fff;padding:72px 64px;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden}
-  .hero .ring{position:absolute;right:-120px;bottom:-120px;width:420px;height:420px;border-radius:50%;border:34px solid var(--green);opacity:.55}
-  .hero .dot{position:absolute;right:60px;bottom:60px;width:170px;height:170px;border-radius:50%;background:var(--blue)}
-  .hero h1{font-size:56px;line-height:1.05;font-weight:800;margin-bottom:16px}
-  .hero p{margin:0;font-size:18px;line-height:1.5;color:#BFDBFE;max-width:420px}
-  .formside{flex:1;display:flex;align-items:center;justify-content:center;padding:40px}
-  @media(max-width:800px){.split{flex-direction:column}.hero{padding:40px 24px}.hero h1{font-size:36px}}
+  body { background: #F5F7FA; }
+
+  .auth-page {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1.05fr .95fr;
+  }
+
+  .auth-brand-panel {
+    background: #101D35;
+    color: white;
+    padding: clamp(30px, 6vw, 80px);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+  }
+
+  .auth-brand-panel::before {
+    content: "";
+    position: absolute;
+    width: 480px;
+    height: 480px;
+    border: 65px solid rgba(181,211,52,.12);
+    border-radius: 50%;
+    right: -210px;
+    bottom: -210px;
+    z-index: -1;
+  }
+
+  .auth-brand-panel::after {
+    content: "";
+    position: absolute;
+    width: 190px;
+    height: 190px;
+    background: rgba(181,211,52,.12);
+    border-radius: 50%;
+    right: 90px;
+    bottom: 95px;
+    z-index: -1;
+  }
+
+  .auth-brand-lockup {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+  }
+
+  .auth-brand-lockup img {
+    width: 48px;
+    height: 48px;
+    object-fit: contain;
+  }
+
+  .auth-brand-name {
+    font-size: 19px;
+    font-weight: 900;
+    letter-spacing: .12em;
+  }
+
+  .auth-brand-subtitle {
+    display: block;
+    color: #B5D334;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: .2em;
+    margin-top: 5px;
+  }
+
+  .auth-copy { max-width: 620px; position: relative; z-index: 1; }
+
+  .auth-eyebrow {
+    color: #B5D334;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: .2em;
+    margin-bottom: 23px;
+  }
+
+  .auth-copy h1 {
+    font-size: clamp(42px, 5.5vw, 72px);
+    line-height: 1.04;
+    letter-spacing: -.055em;
+    font-weight: 900;
+    margin: 0 0 25px;
+  }
+
+  .auth-copy h1 span { color: #B5D334; }
+
+  .auth-copy p {
+    max-width: 430px;
+    color: #C5D0DF;
+    font-size: 15px;
+    line-height: 1.9;
+  }
+
+  .auth-brand-footer {
+    color: #B5D334;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: .2em;
+  }
+
+  .auth-form-panel {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 45px 28px;
+  }
+
+  .auth-card {
+    width: 100%;
+    max-width: 430px;
+    padding: clamp(26px, 4vw, 43px);
+    background: white;
+    border: 1px solid #E2E8F0;
+    border-radius: 20px;
+    box-shadow: 0 18px 55px rgba(16,29,53,.08);
+  }
+
+  .auth-card h2 {
+    color: #101D35;
+    font-size: 30px;
+    font-weight: 900;
+    letter-spacing: -.04em;
+    margin: 0 0 9px;
+  }
+
+  .auth-subtitle {
+    color: #64748B;
+    font-size: 14px;
+    line-height: 1.7;
+    margin-bottom: 28px;
+  }
+
+  .auth-card .field { margin-bottom: 18px; }
+
+  .auth-card .field label {
+    color: #26364D;
+    font-size: 12px;
+    font-weight: 800;
+  }
+
+  .auth-card .field input {
+    min-height: 49px;
+    border-radius: 10px;
+    background: #FBFCFE;
+  }
+
+  .auth-submit {
+    width: 100%;
+    min-height: 50px;
+    margin-top: 10px;
+    background: #B5D334;
+    color: #101D35;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 900;
+    letter-spacing: .07em;
+  }
+
+  .auth-submit:hover { background: #C5E34A; }
+
+  .auth-switch {
+    text-align: center;
+    margin-top: 25px;
+    color: #64748B;
+    font-size: 13px;
+  }
+
+  .auth-switch a {
+    color: #15803D;
+    font-weight: 800;
+    text-decoration: none;
+  }
+
+  .auth-switch a:hover { text-decoration: underline; }
+
+  .auth-mobile-brand { display: none; }
+
+  @media(max-width: 850px) {
+    .auth-page { grid-template-columns: 1fr; }
+    .auth-brand-panel { min-height: 360px; padding: 30px; }
+    .auth-copy { margin: 55px 0 35px; }
+    .auth-copy h1 { font-size: clamp(39px, 9vw, 58px); }
+    .auth-brand-footer { display: none; }
+    .auth-form-panel { padding: 35px 18px; }
+  }
+
+  @media(max-width: 480px) {
+    .auth-brand-panel { min-height: 320px; }
+    .auth-brand-panel::after { right: -60px; }
+    .auth-card { padding: 25px 20px; }
+  }
 </style>
 {% endblock %}
+
 {% block body %}
-<div class="split">
-  <div class="hero">
-    <div style="font-weight:800;font-size:26px;color:#4ADE80">Courtify</div>
-    <div style="position:relative">
-      <h1>Book your court.<br>Own your game.</h1>
-      <p>Find open courts, pick a time and play. Fast, simple, no phone calls.</p>
+<div class="auth-page">
+
+  <section class="auth-brand-panel">
+    <a href="{% url 'accounts:login' %}" class="auth-brand-lockup" style="text-decoration:none;color:white">
+      <img src="{% static 'img/courtify-logo.png' %}" alt="Courtify logo">
+      <img src="{% static 'img/kawayan-logo.png' %}" alt="Kawayan Base logo">
+      <div>
+        <div class="auth-brand-name">KAWAYAN BASE</div>
+        <span class="auth-brand-subtitle">PICKLEBALL CLUB</span>
+      </div>
+    </a>
+
+    <div class="auth-copy">
+      <div class="auth-eyebrow">PICKLEBALL HUB · MEMBER ACCESS</div>
+      <h1>RESERVE YOUR<br>COURT. OWN<br><span>THE GAME.</span></h1>
+      <p>
+        Book available courts at Kawayan Base and manage your
+        reservations in one place. Your next game starts here.
+      </p>
     </div>
-    <div style="color:#93C5FD;font-size:14px;font-weight:500">Pickleball Courts</div>
-    <div class="ring"></div><div class="dot"></div>
-  </div>
-  <div class="formside">
-    <div class="card" style="width:100%;max-width:400px;padding:36px">
-      <h2 style="font-size:28px;font-weight:700;margin-bottom:6px">Welcome back</h2>
-      <p class="muted" style="margin:0 0 24px">Log in to book your next game.</p>
+
+    <div class="auth-brand-footer">PLAY YOUR GAME. YOUR WAY.</div>
+  </section>
+
+  <section class="auth-form-panel">
+    <div class="auth-card">
+      <div class="eyebrow" style="margin-bottom:13px">WELCOME BACK</div>
+      <h2>Log in to your account</h2>
+      <p class="auth-subtitle">Enter your account details to continue to Kawayan Base.</p>
+
       {% include 'accounts/_messages.html' %}
-      <form method="post">{% csrf_token %}
+
+      <form method="post">
+        {% csrf_token %}
         {% include 'accounts/_field.html' with field=form.username %}
         {% include 'accounts/_field.html' with field=form.password %}
-        <button class="btn full" style="margin-top:8px">Log in</button>
+
+        <button type="submit" class="btn auth-submit">LOG IN TO YOUR ACCOUNT</button>
       </form>
-      <p style="margin:20px 0 0;text-align:center;font-size:14px">No account? <a href="{% url 'accounts:register' %}">Register</a></p>
+
+      <div class="auth-switch">
+        New to Kawayan Base?
+        <a href="{% url 'accounts:register' %}">Create an account</a>
+      </div>
     </div>
-  </div>
+  </section>
+
 </div>
 {% endblock %}

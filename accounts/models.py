@@ -17,6 +17,11 @@ class User(AbstractUser):
             self.role = self.Role.ADMIN
         super().save(*args, **kwargs)
 
+    @property
+    def initials(self):
+        letters = (self.first_name[:1] + self.last_name[:1]).upper()
+        return letters or self.username[:1].upper()
+
     def __str__(self):
         return f"{self.username} ({self.get_role_display()})"
     
