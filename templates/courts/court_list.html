@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block title %}Manage Courts | Courtify{% endblock %}
+{% block content %}
+<div class="container">
+  {% include 'accounts/_messages.html' %}
+  <div class="pagehead">
+    <div>
+      <div class="eyebrow" style="color:var(--blue)">ADMIN</div>
+      <h1>Manage courts</h1>
+      <p class="muted" style="margin:6px 0 0">Add, edit and set rates for your courts.</p>
+    </div>
+    <a class="btn" href="{% url 'courts:create' %}">Add court</a>
+  </div>
+
+  {% if courts %}
+  <div class="tablewrap">
+    <table class="tbl">
+      <thead><tr><th>Court</th><th>Details</th><th>Rate</th><th>Status</th><th></th></tr></thead>
+      <tbody>
+        {% for c in courts %}
+        <tr>
+          <td class="name">{{ c.name }}</td>
+          <td>{{ c.get_environment_display }} · Pickleball · Up to {{ c.max_players }} players</td>
+          <td class="num">₱{{ c.rate_per_hour|floatformat:"-2" }}/hr</td>
+          <td>{% if c.status == 'active' %}<span class="tag">Available</span>{% else %}<span class="tag wait">Maintenance</span>{% endif %}</td>
+          <td>
+            <div class="rowbtns">
+              <a class="btn outline xs" href="{% url 'courts:update' c.pk %}">Edit</a>
+              <form method="post" action="{% url 'courts:delete' c.pk %}" onsubmit="return confirm('Delete {{ c.name|escapejs }}?')">{% csrf_token %}
+                <button class="btn del xs">Delete</button>
+              </form>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div class="card" style="padding:32px"><p class="muted" style="margin:0">No courts yet. Click "Add court" to create your first one.</p></div>
+  {% endif %}
+</div>
+{% endblock %}
