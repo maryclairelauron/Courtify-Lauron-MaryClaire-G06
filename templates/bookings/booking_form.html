@@ -1,0 +1,51 @@
+
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="card shadow-sm mx-auto" style="max-width: 650px;">
+        <div class="card-header text-white"
+             style="background: #126B9C;">
+            <h3 class="mb-0">{{ page_title }}</h3>
+        </div>
+
+        <div class="card-body">
+            <form method="POST">
+                {% csrf_token %}
+
+                {% if form.non_field_errors %}
+                    <div class="alert alert-danger">
+                        {{ form.non_field_errors }}
+                    </div>
+                {% endif %}
+
+                {% for field in form %}
+                    <div class="mb-3">
+                        <label class="form-label">
+                            {{ field.label }}
+                        </label>
+
+                        {{ field }}
+
+                        {% for error in field.errors %}
+                            <div class="text-danger small">
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+
+                <button type="submit"
+                        class="btn btn-primary w-100">
+                    Save Booking
+                </button>
+
+                <a href="{% url 'bookings:booking_list' %}"
+                   class="btn btn-outline-secondary w-100 mt-2">
+                    Back to My Bookings
+                </a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
