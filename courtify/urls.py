@@ -8,4 +8,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('accounts.urls')),
     path('', lambda request: redirect('accounts:login')),
+    path('courts/', include('courts.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
