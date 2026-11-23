@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block title %}{{ title }} | Courtify{% endblock %}
+{% block content %}
+<div class="narrow">
+  {% include 'accounts/_messages.html' %}
+  <div class="card" style="padding:36px">
+    <h1 style="font-size:30px;margin-bottom:22px">{{ title }}</h1>
+    <form method="post">{% csrf_token %}
+      {% for field in form %}
+        {% include 'accounts/_field.html' with field=field %}
+      {% endfor %}
+      <div style="display:flex;gap:12px;margin-top:8px">
+        <button class="btn">Save</button>
+        <a class="btn outline" href="{% url 'courts:list' %}">Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
